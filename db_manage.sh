@@ -1,8 +1,9 @@
 #!/usr/bin/env bash
-
+ABS_PATH=$(readlink -f "$0")
+ABS_PATH=$(dirname "$ABS_PATH")
 function init() {
     echo -n "Loading Schema: "
-    SCHEMA="sql/schema.sql"
+    SCHEMA="$ABS_PATH/sql/schema.sql"
     OUTPUT="$(psql $DB < $SCHEMA 2>&1)"
     if [[ $? -ne 0 ]]; then
         echo "Error" >&2
@@ -24,7 +25,7 @@ function init() {
 
     # Execute extra sql files
     echo -n "Adding support functions: "
-    OUTPUT="$(psql $DB < "sql/factbase.sql" 2>&1)"
+    OUTPUT="$(psql $DB < "$ABS_PATH/sql/factbase.sql" 2>&1)"
     if [[ $? -ne 0 ]]; then
         echo "Error"
         echo $OUTPUT
